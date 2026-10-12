@@ -116,7 +116,8 @@ async function adminView() {
   <label>Enroll them in a course (optional)<select id="bc2"><option value="">- none -</option>${courses.map(x => `<option value="${x.id}">${esc(x.name)}</option>`).join("")}</select></label>
   <p id="bm2" class="err"></p><button onclick="bulkAdd()">Add students</button></div>
   <div class="card"><h3>Add user</h3>
-   <input id="un" placeholder="Username"><input id="pw" placeholder="Password">
+   <input type="text" id="un" placeholder="Username">
+<input type="password" id="pw" placeholder="Password">
   <select id="r"><option>student</option><option>teacher</option><option>admin</option></select><p id="m" class="err"></p><button onclick="addUser()">Add user</button></div>
   <div class="card"><h3>Users</h3>${us.map(x => `<div class="item"><span>${esc(x.name)} <span class="muted">· ${esc(x.username)} · ${x.role}</span></span>
   <span><button class="g" onclick="resetPw(${x.id})">Reset password</button> <button class="g" onclick="delUser(${x.id})">Delete</button></span></div>`).join("")}</div>
