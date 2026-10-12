@@ -1,0 +1,6 @@
+node_modules/
+exam.db
+exam.db-wal
+exam.db-shm
+db.json
+*.tmp
