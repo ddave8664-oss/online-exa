@@ -53,7 +53,6 @@
             margin-bottom: 24px;
         }
 
-        /* ሎጎ የሚቀመጥበት ቦታ */
         .logo-img {
             width: 75px;
             height: 75px;
@@ -108,26 +107,30 @@
 
         .pw-container {
             position: relative;
-            width: 100%;
+            display: flex;
+            align-items: center;
         }
 
         .pw-container input {
-            padding-right: 70px !important;
+            padding-right: 65px !important;
         }
 
         .pw-toggle {
             position: absolute;
             right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
+            background: #e2e8f0;
             border: none;
             color: var(--primary);
-            font-size: 0.82rem;
-            font-weight: 600;
+            font-size: 0.75rem;
+            font-weight: 700;
             cursor: pointer;
-            z-index: 10;
-            padding: 4px 8px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .pw-toggle:hover {
+            background: #cbd5e1;
         }
 
         button.btn-primary {
@@ -218,7 +221,6 @@
             $("app").innerHTML = `
                 <div class="card">
                     <div class="header">
-                        <!-- የዩኒቨርሲቲው ሎጎ ሊንክ (የራስዎን የሎጎ ሊንክ መቀየር ይችላሉ) -->
                         <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="University Logo" class="logo-img">
                         <h1 id="sn">BULE HORA UNIVERSITY</h1>
                         <p>Sign in to start your examination session</p>
