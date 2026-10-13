@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Exam Portal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>BULE HORA UNIVERSITY - Exam Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #0f2b48;
             --primary-hover: #163d66;
-            --bg-color: #f4f7fa;
+            --bg-color: #f8fafc;
             --card-bg: #ffffff;
-            --text-main: #1e293b;
+            --text-main: #0f172a;
             --text-muted: #64748b;
             --border-color: #cbd5e1;
             --error-color: #ef4444;
@@ -43,26 +43,38 @@
         .card {
             background: var(--card-bg);
             border-radius: 16px;
-            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
             border: 1px solid #e2e8f0;
-            padding: 36px 32px;
+            padding: 36px 30px;
         }
 
-        .header-logo {
+        .header {
             text-align: center;
-            margin-bottom: 28px;
+            margin-bottom: 24px;
         }
 
-        .header-logo h1 {
+        /* ሎጎ የሚቀመጥበት ቦታ */
+        .logo-img {
+            width: 75px;
+            height: 75px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 14px;
+            border: 2px solid var(--primary);
+            box-shadow: 0 4px 10px rgba(15, 43, 72, 0.15);
+        }
+
+        .header h1 {
             color: var(--primary);
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             font-weight: 700;
-            letter-spacing: -0.02em;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
         }
 
-        .header-logo p {
+        .header p {
             color: var(--text-muted);
-            font-size: 0.875rem;
+            font-size: 0.85rem;
             margin-top: 6px;
         }
 
@@ -80,12 +92,12 @@
 
         .form-group input, .form-group select {
             width: 100%;
-            padding: 11px 14px;
+            padding: 12px 14px;
             border: 1px solid var(--border-color);
             border-radius: 8px;
             font-size: 0.95rem;
-            transition: all 0.2s ease;
             outline: none;
+            transition: all 0.2s ease;
             background-color: #fff;
         }
 
@@ -96,6 +108,11 @@
 
         .pw-container {
             position: relative;
+            width: 100%;
+        }
+
+        .pw-container input {
+            padding-right: 70px !important;
         }
 
         .pw-toggle {
@@ -105,17 +122,19 @@
             transform: translateY(-50%);
             background: none;
             border: none;
-            color: var(--text-muted);
-            font-size: 0.8rem;
+            color: var(--primary);
+            font-size: 0.82rem;
             font-weight: 600;
             cursor: pointer;
+            z-index: 10;
+            padding: 4px 8px;
         }
 
         button.btn-primary {
             width: 100%;
             background-color: var(--primary);
             color: white;
-            padding: 12px;
+            padding: 13px;
             border: none;
             border-radius: 8px;
             font-size: 0.95rem;
@@ -152,6 +171,7 @@
             font-size: 0.85rem;
             margin-top: 12px;
             text-align: center;
+            word-break: break-word;
         }
 
         .success {
@@ -172,6 +192,12 @@
             const opts = { method, headers: { "Content-Type": "application/json" } };
             if (body) opts.body = JSON.stringify(body);
             const res = await fetch(url, opts);
+            
+            const contentType = res.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+                throw new Error("Server error: Endpoint not returning JSON");
+            }
+            
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || "An error occurred");
             return data;
@@ -191,8 +217,10 @@
         function loginView() {
             $("app").innerHTML = `
                 <div class="card">
-                    <div class="header-logo">
-                        <h1 id="sn">Online Exam Portal</h1>
+                    <div class="header">
+                        <!-- የዩኒቨርሲቲው ሎጎ ሊንክ (የራስዎን የሎጎ ሊንክ መቀየር ይችላሉ) -->
+                        <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="University Logo" class="logo-img">
+                        <h1 id="sn">BULE HORA UNIVERSITY</h1>
                         <p>Sign in to start your examination session</p>
                     </div>
 
@@ -226,9 +254,10 @@
         function signupView() {
             $("app").innerHTML = `
                 <div class="card">
-                    <div class="header-logo">
+                    <div class="header">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="University Logo" class="logo-img">
                         <h1>Create Account</h1>
-                        <p>Register your student or instructor account</p>
+                        <p>Register your account to get started</p>
                     </div>
 
                     <div class="form-group">
@@ -238,7 +267,7 @@
 
                     <div class="form-group">
                         <label for="su">Username / ID</label>
-                        <input id="su" placeholder="Choose a username or ID">
+                        <input id="su" placeholder="Choose a username">
                     </div>
 
                     <div class="form-group">
@@ -253,7 +282,7 @@
                         <label for="r">Role</label>
                         <select id="r">
                             <option value="student">Student</option>
-                            <option value="teacher">Teacher / Instructor</option>
+                            <option value="teacher">Instructor</option>
                         </select>
                     </div>
 
@@ -269,11 +298,18 @@
 
         async function login() {
             try {
-                const me = await api("/login", "POST", { username: $("u").value, password: $("p").value });
+                $("e").textContent = "";
+                const me = await api("/api/login", "POST", { username: $("u").value, password: $("p").value });
                 localStorage.setItem("me", JSON.stringify(me));
                 alert("Login successful!");
             } catch (x) {
-                $("e").textContent = x.message;
+                try {
+                    const me = await api("/login", "POST", { username: $("u").value, password: $("p").value });
+                    localStorage.setItem("me", JSON.stringify(me));
+                    alert("Login successful!");
+                } catch (err) {
+                    $("e").textContent = x.message || "Invalid credentials";
+                }
             }
         }
 
@@ -285,14 +321,14 @@
 
             if (!name || !username || !password) {
                 $("se").className = "err";
-                $("se").textContent = "Please fill in all required fields.";
+                $("se").textContent = "Please fill in all fields.";
                 return;
             }
 
             try {
                 await api("/api/register", "POST", { name, username, password, role });
                 $("se").className = "success";
-                $("se").textContent = "Account created successfully! Redirecting to login...";
+                $("se").textContent = "Account created! Redirecting to login...";
                 setTimeout(() => loginView(), 1500);
             } catch (x) {
                 $("se").className = "err";
