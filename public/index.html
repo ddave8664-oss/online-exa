@@ -80,10 +80,9 @@ function shell(title, html) {
 }
 function home() { if (!me) return loginView(); ({ admin: adminView, teacher: teacherView, student: studentView })[me.role]().catch(x => alert(x.message)); }
 function loginView() {
-  app.innerHTML = `<div class="card"><h1 id="sn">Exam System</h1><label>Username<input id="u" name="username" autocomplete="username"></label><label>Password<input id="p" type="password" name="password" autocomplete="off" autocapitalize="off" spellcheck="false" data-pw></label>
-  <p id="e" class="err"></p><button onclick="login()">Log in</button></div>`;
-  $("p").onkeydown = e => e.key === "Enter" && login();
-  fetch("/api/public").then(r => r.json()).then(d => { $("sn").textContent = d.siteName; document.title = d.siteName; }).catch(() => {});
+    app.innerHTML = `<div class="card"><h1 id="sn">Exam System</h1><label>Username<input id="u" name="username" autocomplete="username"></label><label>Password<input id="p" type="password" name="password" autocomplete="off" autocapitalize="off" spellcheck="false" data-pw></label><p id="e" class="err"></p><button onclick="login()">Log in</button></div>`;
+    $("p").onkeydown = e => e.key === "Enter" && login();
+    fetch("/api/public").then(r => r.json()).then(d => { $("sn").textContent = d.siteName; document.title = d.siteName; }).catch(() => {});
 }
 async function login() {
   try { me = await api("login", "POST", { username: $("u").value, password: $("p").value }); localStorage.setItem("me", JSON.stringify(me)); home(); }
