@@ -1,557 +1,306 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Exam System</title>
-<style>
-:root{--bg:#f4f6f8;--card:#fff;--ink:#14213d;--muted:#5b6578;--line:#d5dbe4;--acc:#0f6b5e;--onacc:#fff;--bad:#c0392b;--warn:#b4540a}
-@media(prefers-color-scheme:dark){:root{--bg:#0e1522;--card:#17212f;--ink:#e8edf5;--muted:#9aa6ba;--line:#2a374a;--acc:#4cc3ad;--onacc:#06201b;--bad:#ef7b7b;--warn:#f0a35a}}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Georgia,serif}
-main{max-width:760px;margin:0 auto;padding:20px 16px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:16px}
-input,textarea,select{width:100%;padding:9px;margin:4px 0 12px;font:inherit;color:inherit;background:var(--bg);border:1px solid var(--line);border-radius:6px;box-sizing:border-box}
-button{font:inherit;padding:8px 16px;border-radius:6px;border:1px solid var(--acc);background:var(--acc);color:var(--onacc);cursor:pointer}
-button.g{background:none;color:var(--acc)} button:disabled{opacity:.4;cursor:default}
-:focus-visible{outline:3px solid var(--warn);outline-offset:2px}
-table{width:100%;border-collapse:collapse}td,th{text-align:left;padding:6px;border-bottom:1px solid var(--line)}
-.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
-.err{color:var(--bad);min-height:1.4em;margin:0 0 8px}.muted{color:var(--muted)}
-.item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
-.pill{padding:2px 10px;border:1px solid var(--line);border-radius:99px;font-size:.85rem}
-.pass{color:var(--acc)}.fail{color:var(--bad)}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:16px}
-.stats div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
-.stats b{display:block;font-size:1.6rem}
-label.o{display:block;padding:10px;border:1px solid var(--line);border-radius:6px;margin-bottom:8px;cursor:pointer}
-label.o:has(input:checked){border-color:var(--acc)}
-label.o input,label.chk input{width:auto;margin:0 8px 0 0}
-label.chk{display:inline-block;margin-right:16px}
-#nav{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}
-#nav button{width:36px;height:36px;padding:0;background:none;color:var(--ink);border-color:var(--line)}
-#nav button.ans{background:var(--line)}#nav button.cur{border:2px solid var(--acc)}#nav button.flag{border:2px dashed var(--warn)}
-#tm{font-variant-numeric:tabular-nums;font-weight:bold}#tm.low{color:var(--warn)}
-#warn{color:var(--warn);min-height:1.4em}
-.big{font-size:3rem;margin:0}
-.rv{padding:8px 0;border-bottom:1px solid var(--line)}
-.mask{-webkit-text-security:disc;text-security:disc}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Exam Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f2b48;
+            --primary-hover: #163d66;
+            --bg-color: #f4f7fa;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --error-color: #ef4444;
+            --success-color: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        #app {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            border: 1px solid #e2e8f0;
+            padding: 36px 32px;
+        }
+
+        .header-logo {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .header-logo h1 {
+            color: var(--primary);
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .header-logo p {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-top: 6px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            outline: none;
+            background-color: #fff;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(15, 43, 72, 0.12);
+        }
+
+        .pw-container {
+            position: relative;
+        }
+
+        .pw-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button.btn-primary {
+            width: 100%;
+            background-color: var(--primary);
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            margin-top: 10px;
+        }
+
+        button.btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .toggle-link {
+            text-align: center;
+            margin-top: 22px;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .toggle-link a {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .toggle-link a:hover {
+            text-decoration: underline;
+        }
+
+        .err {
+            color: var(--error-color);
+            font-size: 0.85rem;
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        .success {
+            color: var(--success-color);
+            font-size: 0.85rem;
+            margin-top: 12px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-<main id="app"></main>
-<script>
-const $ = id => document.getElementById(id), app = $("app");
-let me = JSON.parse(localStorage.getItem("me") || "null"), timer, cur = null, lastRs = [], saveT;
-const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const pc = r => r.percent ?? Math.round(r.score / r.total * 100);
-const filled = a => a !== null && a !== undefined && a !== "" && !(Array.isArray(a) && !a.length);
+    <div id="app"></div>
 
-async function api(path, method = "GET", body) {
-  let r, d;
-  try { r = await fetch("/api/" + path, { method, headers: { "Content-Type": "application/json", "x-token": me?.token || "" }, body: body ? JSON.stringify(body) : undefined }); d = await r.json(); }
-  catch { throw new Error("Cannot reach the server. Run npm start and open http://localhost:3000"); }
-  if (r.status === 403 && path !== "login") { logout(); throw new Error("Please log in again"); }
-  if (!r.ok) throw new Error(d.error || "Error");
-  return d;
-}
-function logout() { clearInterval(timer); stopCam(); $("cam")?.remove(); cur = null; localStorage.removeItem("me"); me = null; home(); }
-// ---- In-page dialogs (browsers like VS Code Simple Browser block prompt/confirm) ----
-function dialog({ title = "", text = "", inputs = [], cancel = true }) {
-  return new Promise(res => {
-    const d = document.createElement("div");
-    d.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:16px;z-index:99";
-    d.innerHTML = `<div class="card" style="max-width:420px;width:100%;margin:0"><h3 style="margin-top:0">${esc(title)}</h3><p style="white-space:pre-line">${esc(text)}</p>${inputs.map(l => `<label>${esc(l)}<input type="text" class="mask" autocomplete="off" spellcheck="false" data-pw></label>`).join("")}${inputs.length ? '<label class="chk"><input type="checkbox" onchange="showPw(this)">Show password</label>' : ""}<div style="display:flex;gap:10px;justify-content:flex-end">${cancel ? '<button class="g" data-c>Cancel</button>' : ""}<button data-ok>OK</button></div></div>`;
-    const done = v => { d.remove(); res(v); };
-    d.querySelector("[data-ok]").onclick = () => done(inputs.length ? [...d.querySelectorAll("input")].map(i => i.value) : true);
-    d.querySelector("[data-c]")?.addEventListener("click", () => done(null));
-    document.body.append(d); (d.querySelector("input") || d.querySelector("[data-ok]")).focus();
-  });
-}
-function showPw(cb) { cb.closest(".card").querySelectorAll("[data-pw]").forEach(i => i.classList.toggle("mask", !cb.checked)); }
-const confirmBox = text => dialog({ text }).then(v => !!v);
-window.alert = m => { dialog({ text: String(m), cancel: false }); };
-async function changePw() {
-  const v = await dialog({ title: "Change password", inputs: ["Current password", "New password (at least 6 characters)"] });
-  if (!v) return;
-  try { await api("password", "POST", { old: v[0], new: v[1] }); alert("Password changed"); } catch (x) { alert(x.message); }
-}
-function shell(title, html) {
-  app.innerHTML = `<div class="top"><h1>${title}</h1><span>${esc(me.name)} (${me.role}) <button class="g" onclick="changePw()">Password</button> <button class="g" onclick="logout()">Log out</button></span></div>${html}`;
-}
-function home() { if (!me) return loginView(); ({ admin: adminView, teacher: teacherView, student: studentView })[me.role]().catch(x => alert(x.message)); }
-function loginView() {
-    app.innerHTML = `<div class="card"><h1 id="sn">Exam System</h1><label>Username<input id="u" name="username" autocomplete="username"></label><label>Password<input id="p" type="password" name="password" autocomplete="off" autocapitalize="off" spellcheck="false" data-pw></label><p id="e" class="err"></p><button onclick="login()">Log in</button></div>`;
-    $("p").onkeydown = e => { if (e.key === "Enter") login(); };
-    fetch("/api/public").then(r => r.json()).then(d => { $("sn").textContent = d.siteName; document.title = d.siteName; }).catch(() => {});
-}
-async function login() {
-  try { me = await api("login", "POST", { username: $("u").value, password: $("p").value }); localStorage.setItem("me", JSON.stringify(me)); home(); }
-  catch (x) { $("e").textContent = x.message; }
-}
-function resTable(rs, showStudent = true) {
-  lastRs = rs;
-  return rs.length ? `<div style="overflow-x:auto"><table><tr>${showStudent ? "<th>Student</th>" : ""}<th>Exam</th><th>Score</th><th>Result</th><th>Warnings</th>${showStudent ? "<th>Photos</th>" : ""}${showStudent && me.role === "teacher" ? "<th>Retake</th>" : ""}${!showStudent ? "<th></th>" : ""}</tr>${rs.map(r =>
-    `<tr>${showStudent ? `<td>${esc(r.student)}</td>` : ""}<td>${esc(r.exam)}${r.course ? ` <span class="muted">(${esc(r.course)})</span>` : ""}</td><td>${r.score}/${r.total} (${pc(r)}%)</td>
-    <td class="${r.pending ? "muted" : (r.passed ?? pc(r) >= 50) ? "pass" : "fail"}">${r.pending ? "Pending" : (r.passed ?? pc(r) >= 50) ? "Pass" : "Fail"}</td><td>${r.violations || 0}</td>${showStudent ? `<td>${r.snaps ? `<button class="g" onclick="showSnaps(${r.examId},${r.studentId})">${r.snaps} photos</button>` : "–"}</td>` : ""}${showStudent && me.role === "teacher" ? `<td><button class="g" onclick="retake(${r.examId},${r.studentId})">Allow retake</button></td>` : ""}${!showStudent ? `<td><button class="g" onclick="reviewResult(${r.examId})">Review</button></td>` : ""}</tr>`).join("")}</table></div>` : `<p class="muted">No results yet.</p>`;
-}
-function exportCsv() {
-  const rows = [["Student","Course","Exam","Score","Total","Percent","Result","Warnings","Date"], ...lastRs.map(r => [r.student, r.course || "", r.exam, r.score, r.total, pc(r), r.pending ? "Pending" : (r.passed ?? pc(r) >= 50) ? "Pass" : "Fail", r.violations || 0, r.at])];
-  const b = new Blob([rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n")], { type: "text/csv" });
-  const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = "results.csv"; a.click();
-}
+    <script>
+        const $ = id => document.getElementById(id);
 
-// ================= ADMIN =================
-async function adminView() {
-  const us = await api("users"), rs = await api("results"), st = await api("stats"), courses = await api("courses"), cfg = await api("settings"), notes = await api("notices");
-  shell("Admin", `<div class="stats"><div><b>${st.students}</b>Students</div><div><b>${st.teachers}</b>Teachers</div><div><b>${st.courses}</b>Courses</div><div><b>${st.exams}</b>Exams</div><div><b>${st.taken}</b>Attempts</div><div><b>${st.avg}%</b>Average</div></div>
-  ${noticeCard(courses, notes)}
-  ${courseCard(courses, us.filter(u => u.role === "teacher"), true)}
-  <div class="card"><h3>Settings</h3><label>School / site name<input id="sn2" value="${esc(cfg.siteName)}"></label>
-  <div style="display:flex;gap:10px"><label style="flex:1">Default exam minutes<input id="sm" type="number" value="${cfg.minutes}"></label><label style="flex:1">Default pass mark (%)<input id="sp" type="number" value="${cfg.pass}"></label></div>
-  <label class="chk"><input type="checkbox" id="ss" ${cfg.shuffle ? "checked" : ""}>Shuffle by default</label><label class="chk"><input type="checkbox" id="sa2" ${cfg.showAnswers ? "checked" : ""}>Show answers after submit by default</label>
-  <p id="sm2" class="err"></p><button onclick="saveSettings()">Save settings</button></div>
-  <div class="card"><h3>Add many students at once</h3><p class="muted">One student per line: Full name, username, password (you can paste from Excel)</p>
-10;Chala Bekele, chala, pass5678"></textarea>
-  <label>Enroll them in a course (optional)<select id="bc2"><option value="">- none -</option>${courses.map(x => `<option value="${x.id}">${esc(x.name)}</option>`).join("")}</select></label>
-  <p id="bm2" class="err"></p><button onclick="bulkAdd()">Add students</button></div>
-  <div class="card"><h3>Add user</h3>
-   <input type="text" id="un" placeholder="Username">
-<input type="password" id="pw" placeholder="Password">
-  <select id="r"><option>student</option><option>teacher</option><option>admin</option></select><p id="m" class="err"></p><button onclick="addUser()">Add user</button></div>
-  <div class="card"><h3>Users</h3>${us.map(x => `<div class="item"><span>${esc(x.name)} <span class="muted">· ${esc(x.username)} · ${x.role}</span></span>
-  <span><button class="g" onclick="resetPw(${x.id})">Reset password</button> <button class="g" onclick="delUser(${x.id})">Delete</button></span></div>`).join("")}</div>
-  <div class="card"><div class="top"><h3>All results</h3><button class="g" onclick="exportCsv()">Export CSV</button></div>${resTable(rs)}</div>`);
-}
-async function addUser() {
-  try { await api("users", "POST", { name: $("n").value, username: $("un").value, password: $("pw").value, role: $("r").value }); adminView(); }
-  catch (x) { $("m").textContent = x.message; }
-}
-async function resetPw(id) { const v = await dialog({ title: "Reset password", inputs: ["New password for this user"] }); if (v && v[0]) { await api(`users/${id}/password`, "PUT", { password: v[0] }); alert("Password reset"); } }
-async function delUser(id) { if (await confirmBox("Delete this user?")) { await api("users/" + id, "DELETE"); adminView(); } }
+        async function api(url, method = "GET", body = null) {
+            const opts = { method, headers: { "Content-Type": "application/json" } };
+            if (body) opts.body = JSON.stringify(body);
+            const res = await fetch(url, opts);
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "An error occurred");
+            return data;
+        }
 
-// ================= TEACHER =================
-function parseQs(t) {
-  return parseLines(t).map(q => {
-    const m = q.q.match(/^\[(img\d+|img:[^\]]+)\]\s*/);
-    if (m) { q.q = q.q.slice(m[0].length); q.img = m[1].startsWith("img:") ? m[1].slice(4) : imgs[+m[1].slice(3) - 1]; if (!q.img) throw new Error("Unknown image in: " + q.q); }
-    return q;
-  });
-}
-function parseLines(t) {
-  return t.split("\n").map(l => l.trim()).filter(Boolean).map(l => {
-    let m;
-    if ((m = l.match(/^essay:\s*(.*?)(?:\|\s*(\d+))?\s*$/i))) return { type: "essay", q: m[1].trim(), pts: +m[2] || 5 };
-    if (/^multi:/i.test(l)) {
-      const p = l.slice(6).split("|").map(s => s.trim()), a = p.pop().split(",").map(n => +n - 1);
-      if (p.length < 3 || a.some(i => !(i >= 0 && i < p.length - 1))) throw new Error("Check this line: " + l);
-      return { type: "multi", q: p[0], o: p.slice(1), a };
-    }
-    if (l.includes("=") && !l.includes("|")) { const [q, ...r] = l.split("="), a = r.join("=").trim(); if (!q.trim() || !a) throw new Error("Check this line: " + l); return { type: "text", q: q.trim(), a }; }
-    const p = l.split("|").map(s => s.trim());
-    if (p.length === 2 && /^(true|false)$/i.test(p[1])) return { type: "tf", q: p[0], o: ["True", "False"], a: /^true$/i.test(p[1]) ? 0 : 1 };
-    const a = +p.pop() - 1;
-    if (p.length < 3 || !(a >= 0 && a < p.length - 1)) throw new Error("Check this line: " + l);
-    return { type: "mcq", q: p[0], o: p.slice(1), a };
-  });
-}
-async function teacherView() {
-  const ex = await api("exams"), rs = await api("results"), bank = await api("bank"), pend = await api("grading"), courses = await api("courses"), cfg = await api("settings"), notes = await api("notices");
-  const subjects = [...new Set(bank.map(b => b.subject))]; extra = []; imgs = []; bankCache = bank; myExams = ex; editId = null; bEditIdx = null;
-  const st = id => { const r = rs.filter(x => x.examId === id); return r.length ? `${r.length} taken · average ${Math.round(r.reduce((s, x) => s + pc(x), 0) / r.length)}% · ${Math.round(r.filter(x => x.passed === true || (x.passed === undefined && pc(x) >= 50)).length / r.length * 100)}% passed` : "No attempts yet"; };
-  const gradeCard = pend.length ? pend.map(p => `<div class="rv"><b>${esc(p.student)}</b> · ${esc(p.exam)}<br><span class="muted">Q: ${esc(p.q)}</span>${p.guide ? `<br><span class="muted">Guide: ${esc(p.guide)}</span>` : ""}
-    <p style="white-space:pre-wrap;border-left:3px solid var(--line);padding-left:10px">${esc(p.answer) || "(no answer)"}</p>
-    <input id="g${p.examId}_${p.studentId}_${p.k}" type="number" min="0" max="${p.max}" placeholder="Mark 0-${p.max}" style="width:140px"> <input id="f${p.examId}_${p.studentId}_${p.k}" placeholder="Feedback for the student (optional)" style="width:55%"> <button onclick="gradeEssay(${p.examId},${p.studentId},${p.k},${p.max})">Save mark</button></div>`).join("") : '<p class="muted">Nothing is waiting to be graded.</p>';
-  shell("Teacher", `<div class="card"><h3>Live exams</h3><div id="live" class="muted">Nobody is taking an exam right now.</div></div>
-  ${noticeCard(courses, notes)}
-  ${courseCard(courses, [], false)}
-  <div class="card"><h3 id="title2">New exam</h3>
-  <input id="t" placeholder="Exam title">
-  <label>Course<select id="xc"><option value="">- no course (open to all students) -</option>${courses.map(x => `<option value="${x.id}">${esc(x.name)}</option>`).join("")}</select></label>
-  <div style="display:flex;gap:10px"><label style="flex:1">Minutes<input id="mi" type="number" value="${cfg.minutes}" min="1"></label><label style="flex:1">Pass mark (%)<input id="ps" type="number" value="${cfg.pass}" min="0" max="100"></label></div>
-  <div style="display:flex;gap:10px"><label style="flex:1">Access code (optional)<input id="ac" autocomplete="off"></label><label style="flex:1">Show only N random questions (optional)<input id="pk" type="number" min="0" placeholder="0 = all"></label></div>
-  <label class="chk"><input type="checkbox" id="sh" ${cfg.shuffle ? "checked" : ""}>Shuffle questions and options</label><label class="chk"><input type="checkbox" id="sa" ${cfg.showAnswers ? "checked" : ""}>Show answers after submit</label><label class="chk"><input type="checkbox" id="pr">Require webcam</label>
-  <div style="display:flex;gap:10px;margin-top:12px"><label style="flex:1">Opens (optional)<input id="op" type="datetime-local"></label><label style="flex:1">Closes (optional)<input id="cl" type="datetime-local"></label></div>
-  <div class="card" style="background:var(--bg)"><h4 style="margin-top:0">Add a question</h4>
-  <label>Question type<select id="bt" onchange="bType()"><option value="mcq">Multiple choice (one answer)</option><option value="multi">Multiple choice (several answers)</option><option value="tf">True / False</option><option value="text">Short answer (checked automatically)</option><option value="essay">Essay / writing (teacher marks it)</option></select></label>
-  <label>Question<textarea id="bq" rows="2"></textarea></label>
-  <div id="bf"></div>
-  <label>Explanation shown to students in review (optional)<textarea id="bx" rows="2"></textarea></label>
-  <div style="display:flex;gap:10px;align-items:end;margin-top:8px"><label style="width:110px">Points<input id="bp" type="number" min="1" value="1"></label>
-  <button class="g" style="margin-bottom:12px" onclick="$('bimg').click()">Add image</button><input id="bimg" type="file" accept="image/*" hidden onchange="bImg(this)"><span id="bi" class="muted" style="margin-bottom:12px"></span></div>
-  <p id="bm" class="err"></p><button id="badd" onclick="bAdd()">Add question to exam</button></div>
-  <div id="draft"></div>
-  <details id="qd" style="margin:12px 0"><summary>Quick add: paste many questions at once</summary>
-  <textarea id="qs" rows="7" style="margin-top:8px" placeholder="One question per line:&#10;Multiple choice:  Question | A | B | C | D | correct number&#10;Several answers:  multi: Question | A | B | C | D | 1,3&#10;True/False:  Statement | true&#10;Short answer:  Question = answer&#10;Essay:  essay: Question | points"></textarea></details>
-  <div style="margin:4px 0 12px"><button class="g" onclick="$('fq').click()">Import CSV / Excel</button> <button class="g" onclick="csvTemplate()">CSV template</button> <button class="g" onclick="$('fi').click()">Add image</button>
-  <input id="fq" type="file" accept=".csv,.xlsx" hidden onchange="importQs(this)"><input id="fi" type="file" accept="image/*" hidden onchange="addImg(this)"></div>
-  <div style="display:flex;gap:10px;align-items:end"><label style="flex:2">Add from question bank<select id="bs">${subjects.map(s => `<option>${esc(s)}</option>`).join("") || "<option value=''>(bank is empty)</option>"}</select></label>
-  <label style="flex:1">How many<input id="bn" type="number" value="5" min="1"></label><button class="g" style="margin-bottom:12px" onclick="addFromBank()">Add</button></div>
-  <label class="chk"><input type="checkbox" id="sb">Save typed questions to my bank as</label><input id="sj" placeholder="Subject, e.g. Biology">
-  <p id="info" class="muted"></p><p id="m" class="err"></p><button id="cb" onclick="addExam()">Create exam</button> <button id="cx" class="g" hidden onclick="teacherView()">Cancel edit</button></div>
-  <div class="card"><h3>My question bank</h3>${subjects.length ? subjects.map(s => `<div class="item"><span>${esc(s)} <span class="muted">· ${bank.filter(b => b.subject === s).length} questions</span></span><button class="g" onclick="delBank(${esc(JSON.stringify(s))})">Delete</button></div>`).join("") : '<p class="muted">Empty. Tick "Save typed questions to my bank" when creating an exam.</p>'}</div>
-  ${myExamsCard(ex, courses, st)}
-  <div class="card"><h3>Written answers to grade (${pend.length})</h3>${gradeCard}</div>
-  <div class="card"><div class="top"><h3>Results</h3><button class="g" onclick="exportCsv()">Export CSV</button></div>${resTable(rs)}</div>`);
-  bType(); renderDraft(); loadLive(); clearInterval(liveT); liveT = setInterval(loadLive, 10000);
-}
-async function addExam() {
-  try {
-    const typed = parseQs($("qs").value), questions = typed.concat(extra);
-    if (!questions.length) throw new Error("Add at least one question");
-    const ms = id => $(id).value ? new Date($(id).value).getTime() : null;
-    await api(editId ? "exams/" + editId : "exams", editId ? "PUT" : "POST", { title: $("t").value, minutes: $("mi").value, pass: $("ps").value, shuffle: $("sh").checked, showAnswers: $("sa").checked,
-      proctor: $("pr").checked, courseId: $("xc").value || null, code: $("ac").value, pick: $("pk").value, opensAt: ms("op"), closesAt: ms("cl"), questions });
-    const fresh = questions.filter(q => !bankCache.some(b => b.q === q));
-    if ($("sb").checked && fresh.length) await api("bank", "POST", { subject: $("sj").value.trim() || "General", questions: fresh });
-    teacherView();
-  } catch (x) { $("m").textContent = x.message; }
-}
-async function delExam(id) { if (await confirmBox("Delete this exam and all its results?")) { await api("exams/" + id, "DELETE"); teacherView(); } }
+        function togglePassword(inputId, btn) {
+            const input = $(inputId);
+            if (input.type === "password") {
+                input.type = "text";
+                btn.textContent = "Hide";
+            } else {
+                input.type = "password";
+                btn.textContent = "Show";
+            }
+        }
 
-// ================= STUDENT =================
-async function studentView() {
-  const ex = await api("exams"), rs = await api("results"), cs = await api("courses"), nt = await api("notices");
-  const item = x => `<div class="item"><span><b>${esc(x.title)}</b><br><span class="muted">${x.count} questions · ${x.minutes} min · pass mark ${x.pass}%${x.proctor ? " · webcam required" : ""}${x.needsCode ? " · access code" : ""}${x.closesAt ? " · closes " + new Date(x.closesAt).toLocaleString() : ""}</span></span>${examAction(x)}</div>`;
-  const sect = (title, list) => `<div class="card"><h3>${title}</h3>${list.length ? list.map(item).join("") : '<p class="muted">No exams yet.</p>'}</div>`;
-  const other = ex.filter(x => !cs.some(k => k.id === x.courseId));
-  shell("Student", `${noticeList(nt)}${cs.map(k => sect(`${esc(k.name)} <span class="muted">${esc(k.code)} · ${esc(k.teacher)}</span>`, ex.filter(x => x.courseId === k.id))).join("")}${other.length || !cs.length ? sect("Other exams", other) : ""}
-  <div class="card"><h3>My results</h3>${resTable(rs, false)}</div>`);
-}
-async function startExam(id, status, proctor, needsCode) {
-  if (status === "new" && !(await confirmBox("Start now?\n\n• The timer cannot be paused.\n• Leaving this tab gives a warning. After 3 warnings the exam is submitted automatically."))) return;
-  try {
-    let code = ""; if (needsCode && status === "new") { const v = await dialog({ title: "Access code", inputs: ["Enter the code given by your teacher"] }); if (!v) return; code = v[0]; }
-    if (proctor && !camStream) await startCam().catch(() => { throw new Error("This exam requires your webcam. Allow camera access and try again."); });
-    const d = await api(`exams/${id}/start`, "POST", { code });
-    cur = { id, title: d.title, qs: d.questions, ans: d.questions.map((_, k) => d.answers?.[k] ?? null), flag: [], i: 0, viol: d.violations || 0, end: Date.now() + d.remaining * 1000 };
-  } catch (x) { return alert(x.message); }
-  shell(esc(cur.title), `<div class="card"><div class="top"><span id="prog" class="muted"></span><span>Time left: <span id="tm"></span></span></div>
-    <div id="nav"></div><p id="warn" role="alert">${cur.viol ? `Warnings so far: ${cur.viol}/3` : ""}</p><div id="qbox"></div>
-    <div class="top" style="margin-top:16px"><span><button id="prev" class="g" onclick="goQ(cur.i-1)">Previous</button> <button id="next" class="g" onclick="goQ(cur.i+1)">Next</button> <button id="fl" class="g" onclick="toggleFlag()"></button></span>
-    <button onclick="submitExam(true)">Submit exam</button></div></div>`);
-  renderQ(); mountCam(); clearInterval(pollT); pollT = setInterval(syncTime, 10000); clearInterval(timer);
-  timer = setInterval(() => {
-    const l = Math.max(0, Math.round((cur.end - Date.now()) / 1000));
-    $("tm").textContent = Math.floor(l / 60) + ":" + String(l % 60).padStart(2, "0"); $("tm").classList.toggle("low", l <= 60);
-    if (!l) submitExam(false);
-  }, 1000);
-}
-function renderQ() {
-  const q = cur.qs[cur.i], a = cur.ans[cur.i], p = q.pts || 1;
-  const head = `<p class="muted">Question ${cur.i + 1} of ${cur.qs.length} · ${p} point${p > 1 ? "s" : ""}</p><h3>${esc(q.q)}</h3>${q.img ? `<img src="${esc(q.img)}" alt="Question image" style="max-width:100%;border-radius:6px;margin-bottom:12px">` : ""}`;
-  let body;
-  if (q.type === "text") body = `<input value="${esc(a)}" placeholder="Type your answer" autocomplete="off" oninput="setAns(this.value)">`;
-  else if (q.type === "essay") body = `<textarea rows="9" placeholder="Write your answer here..." oninput="setAns(this.value);$('wc').textContent=wordCount(this.value)">${esc(a)}</textarea><p class="muted"><span id="wc">${wordCount(a)}</span> words · marked by your teacher</p>`;
-  else if (q.type === "multi") body = `<p class="muted">Select all that apply.</p>` + q.o.map((o, j) => `<label class="o"><input type="checkbox" ${(a || []).includes(j) ? "checked" : ""} onchange="toggleMulti(${j},this.checked)">${esc(o)}</label>`).join("");
-  else body = q.o.map((o, j) => `<label class="o"><input type="radio" name="r" ${a === j ? "checked" : ""} onchange="setAns(${j})">${esc(o)}</label>`).join("");
-  $("qbox").innerHTML = head + body; nav();
-}
-function nav() {
-  $("nav").innerHTML = cur.qs.map((_, k) => `<button aria-label="Question ${k + 1}" class="${filled(cur.ans[k]) ? "ans" : ""} ${k === cur.i ? "cur" : ""} ${cur.flag[k] ? "flag" : ""}" onclick="goQ(${k})">${k + 1}</button>`).join("");
-  $("prog").textContent = `${cur.ans.filter(filled).length}/${cur.qs.length} answered`;
-  $("prev").disabled = cur.i === 0; $("next").disabled = cur.i === cur.qs.length - 1;
-  $("fl").textContent = cur.flag[cur.i] ? "Remove flag" : "Flag for review";
-}
-const goQ = k => { cur.i = k; renderQ(); };
-const toggleFlag = () => { cur.flag[cur.i] = !cur.flag[cur.i]; nav(); };
-function persist() { clearTimeout(saveT); saveT = setTimeout(() => cur && !cur.done && api(`exams/${cur.id}/save`, "POST", { answers: cur.ans, violations: cur.viol }).catch(() => {}), 500); }
-function setAns(v) { cur.ans[cur.i] = v; persist(); nav(); }
-async function submitExam(manual) {
-  if (manual) { const left = cur.ans.filter(a => !filled(a)).length; if (!(await confirmBox(left ? `${left} question(s) are unanswered. Submit anyway?` : "Submit your exam?"))) return; }
-  clearInterval(timer); clearInterval(pollT); stopCam(); $("cam")?.remove(); cur.done = true;
-  try { resultView(await api(`exams/${cur.id}/submit`, "POST", { answers: cur.ans, violations: cur.viol })); }
-  catch (x) { alert(x.message); studentView(); }
-  cur = null;
-}
-function resultView(r) {
-  shell("Result", `<div class="card"><h2>${esc(r.exam)}</h2><p class="big ${r.passed ? "pass" : "fail"}">${r.percent}%</p>
-  <p>${r.pending ? `<b>Awaiting grading</b> · ${r.pending} written answer(s) will be marked by your teacher. Score so far: ${r.score}/${r.total} points` : `<b class="${r.passed ? "pass" : "fail"}">${r.passed ? "Passed" : "Not passed"}</b> · ${r.score} of ${r.total} points`}${r.violations ? ` · ${r.violations} warning(s)` : ""}</p>
-  ${r.review ? r.review.map((x, i) => `<div class="rv"><b>${i + 1}. ${esc(x.q)}</b><br><span class="${x.ok === null ? "muted" : x.ok ? "pass" : "fail"}">Your answer: ${esc(x.yours)}</span>${x.ok === false ? `<br>Correct answer: ${esc(x.right)}` : ""}</div>`).join("") : '<p class="muted">Your teacher has hidden the correct answers.</p>'}
-  <p><button onclick="studentView()">Back to exams</button></p></div>`);
-}
+        function loginView() {
+            $("app").innerHTML = `
+                <div class="card">
+                    <div class="header-logo">
+                        <h1 id="sn">Online Exam Portal</h1>
+                        <p>Sign in to start your examination session</p>
+                    </div>
 
-let extra = [], imgs = [], bankCache = [], camStream, snapT;
+                    <div class="form-group">
+                        <label for="u">Username or ID</label>
+                        <input id="u" name="username" placeholder="Enter your username" autocomplete="username">
+                    </div>
 
-function examAction(x) {
-  const now = Date.now();
-  if (x.status === "done") return '<span class="pill">Completed</span>';
-  if (x.status === "new" && x.opensAt && now < x.opensAt) return `<span class="pill">Opens ${new Date(x.opensAt).toLocaleString()}</span>`;
-  if (x.status === "new" && x.closesAt && now > x.closesAt) return '<span class="pill">Closed</span>';
-  return `<button onclick="startExam(${x.id},'${x.status}',${x.proctor},${!!x.needsCode})">${x.status === "inprogress" ? "Resume" : "Start"}</button>`;
-}
+                    <div class="form-group">
+                        <label for="p">Password</label>
+                        <div class="pw-container">
+                            <input id="p" type="password" name="password" placeholder="Enter your password" autocomplete="current-password">
+                            <button type="button" class="pw-toggle" onclick="togglePassword('p', this)">Show</button>
+                        </div>
+                    </div>
 
-// ---- Webcam proctoring (snapshots every 60 s; teacher can view them) ----
-async function startCam() { camStream = await navigator.mediaDevices.getUserMedia({ video: { width: 320, height: 240 } }); }
-function stopCam() { clearInterval(snapT); camStream?.getTracks().forEach(t => t.stop()); camStream = null; }
-function mountCam() {
-  $("cam")?.remove(); if (!camStream) return;
-  const v = document.createElement("video"); v.id = "cam"; v.muted = true; v.autoplay = true; v.playsInline = true; v.srcObject = camStream;
-  v.style.cssText = "position:fixed;right:12px;bottom:12px;width:120px;border-radius:8px;border:2px solid var(--acc);z-index:5";
-  document.body.append(v); clearInterval(snapT); snapT = setInterval(snap, 60000); setTimeout(snap, 4000);
-}
-function snap() {
-  const v = $("cam"); if (!v || !v.videoWidth || !cur) return;
-  const c = document.createElement("canvas"); c.width = 240; c.height = 180; c.getContext("2d").drawImage(v, 0, 0, 240, 180);
-  api(`exams/${cur.id}/snap`, "POST", { img: c.toDataURL("image/jpeg", 0.5) }).catch(() => {});
-}
-async function showSnaps(e, s) {
-  try {
-    const list = await api(`snaps/${e}/${s}`), d = document.createElement("div");
-    d.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.85);overflow:auto;padding:20px;z-index:9";
-    d.innerHTML = `<button onclick="this.parentNode.remove()">Close</button><div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px">${list.map(p => `<figure style="margin:0;color:#fff"><img src="${p.img}" width="200"><figcaption>${new Date(p.t).toLocaleTimeString()}</figcaption></figure>`).join("")}</div>`;
-    document.body.append(d);
-  } catch (x) { alert(x.message); }
-}
+                    <button class="btn-primary" onclick="login()">Log In</button>
+                    <p id="e" class="err"></p>
 
-// ---- Teacher tools: images, CSV/Excel import, question bank ----
-function addImg(inp) {
-  const f = inp.files[0]; if (!f) return;
-  const im = new Image();
-  im.onload = () => {
-    const k = Math.min(1, 700 / im.width), c = document.createElement("canvas"); c.width = im.width * k; c.height = im.height * k;
-    c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); imgs.push(c.toDataURL("image/jpeg", 0.7));
-    const t = $("qs"); t.value += (t.value && !t.value.endsWith("\n") ? "\n" : "") + `[img${imgs.length}] `; $("qd").open = true; t.focus();
-    $("info").textContent = `Image saved as [img${imgs.length}]. Finish that line with your question.`;
-  };
-  im.src = URL.createObjectURL(f); inp.value = "";
-}
-function csvRows(t) {
-  const rows = []; let r = [], c = "", q = false;
-  for (let i = 0; i < t.length; i++) {
-    const ch = t[i];
-    if (q) { if (ch === '"' && t[i + 1] === '"') { c += '"'; i++; } else if (ch === '"') q = false; else c += ch; }
-    else if (ch === '"') q = true; else if (ch === ",") { r.push(c); c = ""; }
-    else if (ch === "\n") { r.push(c); rows.push(r); r = []; c = ""; } else if (ch !== "\r") c += ch;
-  }
-  r.push(c); rows.push(r); return rows;
-}
-async function importQs(inp) {
-  const f = inp.files[0]; if (!f) return; let rows;
-  try {
-    if (/\.xlsx$/i.test(f.name)) {
-      if (!window.XLSX) await new Promise((ok, no) => { const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"; s.onload = ok; s.onerror = () => no(new Error("Excel reader needs internet. Save the file as CSV and import that instead.")); document.head.append(s); });
-      const wb = XLSX.read(await f.arrayBuffer()); rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
-    } else rows = csvRows(await f.text());
-    const lines = rows.slice(1).map(r => Array.from({ length: 7 }, (_, i) => String(r[i] ?? "").trim())).filter(r => r[1]).map(([t, q, a, b, c, d, ans]) => {
-      q = q.replace(/\|/g, "/"); t = t.toLowerCase();
-      return t === "text" ? `${q} = ${ans}` : t === "tf" ? `${q} | ${ans}` : `${q} | ${[a, b, c, d].filter(Boolean).join(" | ")} | ${ans}`;
-    });
-    const ta = $("qs"); ta.value += (ta.value && !ta.value.endsWith("\n") ? "\n" : "") + lines.join("\n");
-    $("info").textContent = `${lines.length} question(s) imported. Check them below, then create the exam.`; $("m").textContent = "";
-  } catch (x) { $("m").textContent = x.message; }
-  inp.value = "";
-}
-function csvTemplate() {
-  const t = 'Type,Question,Option1,Option2,Option3,Option4,Answer\nmcq,What is 12 x 8?,96,88,108,86,1\ntf,The Earth is flat,,,,,false\ntext,Capital of Ethiopia,,,,,Addis Ababa\n';
-  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([t], { type: "text/csv" })); a.download = "questions-template.csv"; a.click();
-}
-function addFromBank() {
-  const s = $("bs").value, n = Math.max(1, +$("bn").value || 5), pool = bankCache.filter(b => b.subject === s && !extra.includes(b.q));
-  if (!pool.length) { $("info").textContent = "No more questions in that subject."; return; }
-  extra.push(...pool.sort(() => Math.random() - .5).slice(0, n).map(b => b.q));
-  $("info").textContent = `${extra.length} question(s) added from the bank.`; renderDraft();
-}
-async function delBank(s) { if (await confirmBox(`Delete all "${s}" questions from your bank?`)) { for (const b of bankCache.filter(x => x.subject === s)) await api("bank/" + b.id, "DELETE"); teacherView(); } }
+                    <div class="toggle-link">
+                        Don't have an account? <a onclick="signupView()">Sign Up</a>
+                    </div>
+                </div>
+            `;
+            $("p").onkeydown = e => e.key === "Enter" && login();
+            fetch("/api/public").then(r => r.json()).then(d => { 
+                if(d.siteName) $("sn").textContent = d.siteName; 
+            }).catch(() => {});
+        }
 
-// ---- Question builder (all question types) ----
-const typeName = { mcq: "Multiple choice", multi: "Several answers", tf: "True/False", text: "Short answer", essay: "Essay" };
-const wordCount = t => (String(t ?? "").trim().match(/\S+/g) || []).length;
-function toggleMulti(j, on) { const s = new Set(cur.ans[cur.i] || []); on ? s.add(j) : s.delete(j); cur.ans[cur.i] = [...s].sort((a, b) => a - b); persist(); nav(); }
-let bImgData = null;
-function bType() {
-  const t = $("bt").value, opt = (i, kind) => `<div style="display:flex;gap:8px;align-items:center"><input type="${kind}" class="bk" name="bc" value="${i}" style="width:auto;margin:0"><input class="bo" placeholder="Option ${"ABCDEF"[i]}" style="margin:4px 0"></div>`;
-  $("bf").innerHTML = t === "mcq" || t === "multi"
-    ? `<p class="muted">${t === "mcq" ? "Tick the one correct option." : "Tick every correct option."} Leave unused options empty.</p>` + [0, 1, 2, 3, 4, 5].map(i => opt(i, t === "mcq" ? "radio" : "checkbox")).join("")
-    : t === "tf" ? `<label class="chk"><input type="radio" name="tf" value="true" checked>True</label><label class="chk"><input type="radio" name="tf" value="false">False</label>`
-    : t === "text" ? `<label>Accepted answer(s) - separate several with |<input id="ba" placeholder="e.g. Addis Ababa | Addis Abeba"></label>`
-    : `<label>Marking guide / model answer (only teachers see this)<textarea id="bg" rows="3"></textarea></label>`;
-  $("bp").value = t === "essay" ? 5 : 1;
-}
-function bImg(inp) {
-  const f = inp.files[0]; if (!f) return; const im = new Image();
-  im.onload = () => { const k = Math.min(1, 700 / im.width), c = document.createElement("canvas"); c.width = im.width * k; c.height = im.height * k;
-    c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); bImgData = c.toDataURL("image/jpeg", 0.7); $("bi").textContent = "Image attached"; };
-  im.src = URL.createObjectURL(f); inp.value = "";
-}
-function bAdd() {
-  try {
-    const type = $("bt").value, q = $("bq").value.trim(), item = { type, q, pts: Math.max(1, +$("bp").value || 1) };
-    if (!q) throw new Error("Write the question first");
-    if (type === "mcq" || type === "multi") {
-      const txt = [...document.querySelectorAll(".bo")].map(i => i.value.trim()), on = [...document.querySelectorAll(".bk")].map(i => i.checked);
-      const keep = txt.map((t, i) => t ? i : -1).filter(i => i >= 0);
-      if (keep.length < 2) throw new Error("Give at least two options");
-      const right = keep.map((i, k) => on[i] ? k : -1).filter(k => k >= 0);
-      if (!right.length) throw new Error("Tick the correct answer");
-      item.o = keep.map(i => txt[i]); item.a = type === "mcq" ? right[0] : right;
-    } else if (type === "tf") { item.o = ["True", "False"]; item.a = document.querySelector("input[name=tf]:checked").value === "true" ? 0 : 1; }
-    else if (type === "text") { item.a = $("ba").value.split("|").map(s => s.trim()).filter(Boolean); if (!item.a.length) throw new Error("Enter the accepted answer"); }
-    else item.guide = $("bg").value.trim();
-    if ($("bx").value.trim()) item.explain = $("bx").value.trim();
-    if (bImgData) item.img = bImgData;
-    if (bEditIdx !== null) { extra[bEditIdx] = item; bEditIdx = null; $("badd").textContent = "Add question to exam"; } else extra.push(item);
-    bImgData = null; $("bi").textContent = ""; $("bq").value = ""; $("bx").value = ""; $("bm").textContent = "";
-    bType(); renderDraft();
-  } catch (x) { $("bm").textContent = x.message; }
-}
-function renderDraft() {
-  $("draft").innerHTML = extra.length ? `<h4>Questions in this exam (${extra.length})</h4>` + extra.map((q, i) =>
-    `<div class="item"><span>${i + 1}. ${esc(q.q)} <span class="pill">${typeName[q.type || "mcq"]} · ${q.pts || 1} pt</span>${q.img ? " (image)" : ""}</span><span><button class="g" onclick="bEdit(${i})">Edit</button> <button class="g" onclick="bMove(${i},-1)" aria-label="Move up">↑</button> <button class="g" onclick="bMove(${i},1)" aria-label="Move down">↓</button> <button class="g" onclick="bRemove(${i})">Remove</button></span></div>`).join("") : "";
-}
-async function gradeEssay(e, s, k, max) {
-  const v = $(`g${e}_${s}_${k}`).value;
-  if (v === "" || +v < 0 || +v > max) return alert(`Enter a mark from 0 to ${max}`);
-  try { await api("grade", "POST", { examId: e, studentId: s, k, mark: +v, feedback: $(`f${e}_${s}_${k}`).value }); teacherView(); } catch (x) { alert(x.message); }
-}
+        function signupView() {
+            $("app").innerHTML = `
+                <div class="card">
+                    <div class="header-logo">
+                        <h1>Create Account</h1>
+                        <p>Register your student or instructor account</p>
+                    </div>
 
-// ---- Courses, settings, bulk import ----
-function courseCard(courses, teachers, admin) {
-  return `<div class="card"><h3>Courses</h3>
-  <div style="display:flex;gap:10px;flex-wrap:wrap"><input id="cn" placeholder="Course name" style="flex:2;min-width:160px"><input id="cc" placeholder="Code" style="flex:1;min-width:90px">
-  ${admin ? `<select id="ct" style="flex:2;min-width:140px">${teachers.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join("")}</select>` : ""}</div>
-  <p id="cm" class="err"></p><button onclick="addCourse(${admin})">Create course</button>
-  ${courses.map(k => `<div class="rv"><div class="top"><b>${esc(k.name)} <span class="muted">${esc(k.code)}${admin ? " · " + esc(k.teacher) : ""} · ${k.count} students</span></b>
-    <button class="g" onclick="delCourse(${k.id})">Delete</button></div>
-    <textarea id="en${k.id}" rows="2" placeholder="Student usernames to enroll (one per line or separated by commas)"></textarea>
-    <button class="g" onclick="enroll(${k.id})">Enroll</button> <button class="g" onclick="enroll(${k.id}, true)">Enroll all students</button>
-    <p class="muted">${k.students.map(s => `${esc(s.name)} <a href="#" onclick="unenroll(${k.id},${s.id});return false" aria-label="Remove">x</a>`).join(", ") || "No students yet."}</p></div>`).join("")}</div>`;
-}
-async function addCourse(admin) {
-  try { await api("courses", "POST", { name: $("cn").value, code: $("cc").value, teacherId: admin ? $("ct").value : undefined }); home(); }
-  catch (x) { $("cm").textContent = x.message; }
-}
-async function delCourse(id) { if (await confirmBox("Delete this course? Its exams stay, but become open to all students.")) { await api("courses/" + id, "DELETE"); home(); } }
-async function enroll(id, all) {
-  const usernames = ($("en" + id).value || "").split(/[\n,;]+/).map(x => x.trim()).filter(Boolean);
-  try { const r = await api(`courses/${id}/enroll`, "POST", { usernames, all: !!all }); home(); alert(`${r.added} student(s) enrolled.` + (r.missing.length ? ` Not found: ${r.missing.join(", ")}` : "")); }
-  catch (x) { alert(x.message); }
-}
-async function unenroll(cid, sid) { await api(`courses/${cid}/students/${sid}`, "DELETE"); home(); }
-async function saveSettings() {
-  try { await api("settings", "PUT", { siteName: $("sn2").value, minutes: $("sm").value, pass: $("sp").value, shuffle: $("ss").checked, showAnswers: $("sa2").checked }); alert("Settings saved"); }
-  catch (x) { $("sm2").textContent = x.message; }
-}
-async function bulkAdd() {
-  const users = $("bulk").value.split("\n").map(l => l.split(/\t|,/).map(x => x.trim())).filter(p => p.length >= 3 && p[0]).map(p => ({ name: p[0], username: p[1], password: p.slice(2).join(",") }));
-  if (!users.length) { $("bm2").textContent = "Use the format: Full name, username, password"; return; }
-  try { const r = await api("users/bulk", "POST", { users, courseId: $("bc2").value }); home(); alert(`${r.created} student(s) added.` + (r.skipped.length ? ` Skipped (duplicate or invalid): ${r.skipped.join(", ")}` : "")); }
-  catch (x) { $("bm2").textContent = x.message; }
-}
+                    <div class="form-group">
+                        <label for="fn">Full Name</label>
+                        <input id="fn" placeholder="e.g. Chala Bekele">
+                    </div>
 
-// ---- Live monitor, time control, announcements ----
-let pollT, liveT;
-async function syncTime() {   // student: pick up time changes made by the teacher
-  if (!cur || cur.done) return clearInterval(pollT);
-  try {
-    const r = await api(`exams/${cur.id}/remaining`), was = Math.round((cur.end - Date.now()) / 1000);
-    cur.end = Date.now() + r.remaining * 1000;
-    if (Math.abs(r.remaining - was) > 30) $("warn").textContent = "Your teacher changed the time. Time left: " + Math.ceil(r.remaining / 60) + " min.";
-    if (r.remaining <= 0) submitExam(false);
-  } catch {}
-}
-async function loadLive() {
-  const box = $("live"); if (!box) return clearInterval(liveT);
-  try {
-    const d = await api("live"), fmt = s => Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
-    box.innerHTML = d.length ? d.map(e => `<div class="rv"><div class="top"><b>${esc(e.title)} <span class="muted">· ${e.students.length} in progress · ${e.minutes} min total</span></b>
-      <span>Everyone: ${[-5, 5, 10, 15].map(n => `<button class="g" onclick="adjustTime(${e.examId},${n})">${n > 0 ? "+" : ""}${n}</button>`).join("")}</span></div>
-      <div style="overflow-x:auto"><table><tr><th>Student</th><th>Time left</th><th>Answered</th><th>Warnings</th><th>This student</th></tr>${e.students.map(s => `<tr><td>${esc(s.student)}</td><td>${fmt(s.remaining)}</td><td>${s.answered}/${s.total}</td><td>${s.violations}</td>
-      <td>${[-5, 5, 10].map(n => `<button class="g" onclick="adjustTime(${e.examId},${n},${s.studentId})">${n > 0 ? "+" : ""}${n}</button>`).join("")}</td></tr>`).join("")}</table></div></div>`).join("")
-      : '<span class="muted">Nobody is taking an exam right now.</span>';
-  } catch {}
-}
-async function adjustTime(examId, minutes, studentId) {
-  const who = studentId ? "this student" : "everyone in this exam (this also changes the exam's total time)";
-  if (!(await confirmBox(`${minutes > 0 ? "Add" : "Remove"} ${Math.abs(minutes)} minute(s) for ${who}?`))) return;
-  try { await api(`exams/${examId}/time`, "POST", { minutes, studentId }); loadLive(); } catch (x) { alert(x.message); }
-}
-function noticeList(nt) {
-  return nt.length ? `<div class="card"><h3>Announcements</h3>${nt.map(n => `<div class="rv"><b>${esc(n.author)}</b> <span class="muted">${n.course ? esc(n.course) + " · " : ""}${new Date(n.at).toLocaleString()}</span><br>${esc(n.text)}</div>`).join("")}</div>` : "";
-}
-function noticeCard(courses, notes) {
-  return `<div class="card"><h3>Announcements</h3><textarea id="nt" rows="2" placeholder="Message for your students"></textarea>
-  <label>Send to<select id="nc"><option value="">All students</option>${courses.map(k => `<option value="${k.id}">${esc(k.name)}</option>`).join("")}</select></label>
-  <p id="nm" class="err"></p><button onclick="postNotice()">Post announcement</button>
-  ${notes.map(n => `<div class="item"><span>${esc(n.text)} <span class="muted">· ${n.course ? esc(n.course) : "All"} · ${new Date(n.at).toLocaleDateString()}</span></span><button class="g" onclick="delNotice(${n.id})">Delete</button></div>`).join("")}</div>`;
-}
-async function postNotice() { try { await api("notices", "POST", { text: $("nt").value, courseId: $("nc").value || null }); home(); } catch (x) { $("nm").textContent = x.message; } }
-async function delNotice(id) { await api("notices/" + id, "DELETE"); home(); }
+                    <div class="form-group">
+                        <label for="su">Username / ID</label>
+                        <input id="su" placeholder="Choose a username or ID">
+                    </div>
 
-// ---- Edit exam, move/edit questions, allow retake ----
-let myExams = [], editId = null, bEditIdx = null;
-function editExam(id) {
-  const x = myExams.find(e => e.id === id); if (!x) return;
-  const ts = v => v ? new Date(v - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16) : "";
-  editId = id; extra = JSON.parse(JSON.stringify(x.questions)); bEditIdx = null;
-  $("t").value = x.title; $("xc").value = x.courseId || ""; $("mi").value = x.minutes; $("ps").value = x.pass ?? 50;
-  $("sh").checked = !!x.shuffle; $("sa").checked = !!x.showAnswers; $("pr").checked = !!x.proctor; $("op").value = ts(x.opensAt); $("cl").value = ts(x.closesAt);
-  $("ac").value = x.code || ""; $("pk").value = x.pick || ""; $("qs").value = ""; $("sb").checked = false; $("info").textContent = "Editing - change anything, then press Save changes.";
-  $("title2").textContent = "Edit exam: " + x.title; $("cb").textContent = "Save changes"; $("cx").hidden = false;
-  renderDraft(); $("title2").scrollIntoView({ behavior: "smooth" });
-}
-function bMove(i, d) { const j = i + d; if (j < 0 || j >= extra.length) return; [extra[i], extra[j]] = [extra[j], extra[i]]; bEditIdx = null; renderDraft(); }
-function bRemove(i) { extra.splice(i, 1); bEditIdx = null; renderDraft(); }
-function bEdit(i) {
-  const q = extra[i]; bEditIdx = i; $("bt").value = q.type || "mcq"; bType();
-  $("bq").value = q.q; $("bx").value = q.explain || ""; $("bp").value = q.pts || 1; bImgData = q.img || null; $("bi").textContent = q.img ? "Image attached" : "";
-  if (!q.type || q.type === "mcq" || q.type === "multi") {
-    document.querySelectorAll(".bo").forEach((inp, k) => { inp.value = q.o[k] || ""; });
-    document.querySelectorAll(".bk").forEach((inp, k) => { inp.checked = [].concat(q.a).includes(k); });
-  } else if (q.type === "tf") document.querySelector(`input[name=tf][value=${q.a === 0 ? "true" : "false"}]`).checked = true;
-  else if (q.type === "text") $("ba").value = [].concat(q.a).join(" | ");
-  else $("bg").value = q.guide || "";
-  $("badd").textContent = "Update question"; $("bq").scrollIntoView({ behavior: "smooth" });
-}
-async function retake(e, s) {
-  if (!(await confirmBox("Delete this student's result so they can take the exam again? The old result will be lost."))) return;
-  try { await api(`exams/${e}/reset`, "POST", { studentId: s }); teacherView(); } catch (x) { alert(x.message); }
-}
+                    <div class="form-group">
+                        <label for="sp">Password</label>
+                        <div class="pw-container">
+                            <input id="sp" type="password" placeholder="Create a password">
+                            <button type="button" class="pw-toggle" onclick="togglePassword('sp', this)">Show</button>
+                        </div>
+                    </div>
 
-// ---- Exams grouped by course, review, analysis, copy ----
-function myExamsCard(ex, courses, st) {
-  const item = x => `<div class="item"><span><b>${esc(x.title)}</b><br><span class="muted">${x.questions.length} questions · ${x.minutes} min · pass ${x.pass ?? 50}%${x.code ? " · code: " + esc(x.code) : ""}${x.pick ? " · random " + x.pick : ""}<br>${st(x.id)}</span></span>
-    <span><button class="g" onclick="showAnalysis(${x.id})">Analysis</button> <button class="g" onclick="editExam(${x.id})">Edit</button> <button class="g" onclick="dupExam(${x.id})">Copy</button> <button class="g" onclick="delExam(${x.id})">Delete</button></span></div>`;
-  const grp = (title, list, cid) => `<div class="card"><div class="top"><h3>${title}</h3><button class="g" onclick="newExamIn(${cid})">+ New exam</button></div>${list.length ? list.map(item).join("") : '<p class="muted">No exams yet.</p>'}</div>`;
-  const loose = ex.filter(x => !courses.some(k => k.id === x.courseId));
-  return courses.map(k => grp(`${esc(k.name)} <span class="muted">${esc(k.code)}</span>`, ex.filter(x => x.courseId === k.id), k.id)).join("") + (loose.length || !courses.length ? grp("Exams without a course", loose, 0) : "");
-}
-function newExamIn(cid) { $("xc").value = cid || ""; $("title2").scrollIntoView({ behavior: "smooth" }); $("t").focus(); }
-function dupExam(id) {
-  editExam(id); editId = null; $("t").value += " (copy)"; $("title2").textContent = "New exam (copy)"; $("cb").textContent = "Create exam";
-  $("info").textContent = "Copy loaded - change what you need, then press Create exam.";
-}
-async function showAnalysis(id) {
-  try {
-    const rows = await api("analysis/" + id), d = document.createElement("div");
-    d.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.75);overflow:auto;padding:20px;z-index:9";
-    d.innerHTML = `<div class="card" style="max-width:720px;margin:0 auto"><div class="top"><h3>Question analysis</h3><button onclick="this.parentNode.parentNode.parentNode.remove()">Close</button></div>
-    <p class="muted">Share of students who got each question right. Very low = too hard or unclear; very high = too easy.</p>
-    ${rows.map(r => `<div class="rv"><b>${r.qi + 1}. ${esc(r.q)}</b><br><span class="muted">${r.n} answered</span> · <b class="${r.pct === null ? "muted" : r.pct >= 60 ? "pass" : "fail"}">${r.pct === null ? "no data" : r.pct + "%"}</b></div>`).join("")}</div>`;
-    document.body.append(d);
-  } catch (x) { alert(x.message); }
-}
-async function reviewResult(id) {
-  try {
-    const r = await api("review/" + id);
-    shell("Review: " + esc(r.exam), `<div class="card"><p class="big ${r.passed ? "pass" : "fail"}">${r.percent}%</p><p>${r.pending ? "<b>Awaiting grading</b> · " : ""}${r.score} of ${r.total} points</p>
-    ${r.review ? r.review.map((x, i) => `<div class="rv"><b>${i + 1}. ${esc(x.q)}</b> <span class="muted">(${x.pts} pt)</span><br>
-      <span class="${x.ok === null ? "muted" : x.ok ? "pass" : "fail"}">Your answer: ${esc(x.yours)}</span>${x.ok === false ? `<br>Correct answer: ${esc(x.right)}` : ""}
-      ${x.mark !== undefined ? `<br>Mark: <b>${x.mark === null ? "not graded yet" : x.mark + " / " + x.max}</b>${x.feedback ? `<br>Teacher feedback: ${esc(x.feedback)}` : ""}` : ""}
-      ${x.explain ? `<br><span class="muted">Explanation: ${esc(x.explain)}</span>` : ""}</div>`).join("") : '<p class="muted">The question review is not available for this exam.</p>'}
-    <p><button onclick="studentView()">Back</button></p></div>`);
-  } catch (x) { alert(x.message); }
-}
+                    <div class="form-group">
+                        <label for="r">Role</label>
+                        <select id="r">
+                            <option value="student">Student</option>
+                            <option value="teacher">Teacher / Instructor</option>
+                        </select>
+                    </div>
 
-// ---- Anti-cheat: tab switching and copy/paste ----
-document.addEventListener("visibilitychange", () => {
-  if (!cur || cur.done || !document.hidden) return;
-  cur.viol++; persist();
-  $("warn").textContent = `Warning ${cur.viol}/3: you left the exam tab. At 3 warnings the exam is submitted automatically.`;
-  if (cur.viol >= 3) submitExam(false);
-});
-["copy", "cut", "paste", "contextmenu"].forEach(t => document.addEventListener(t, e => { if (cur && !cur.done) e.preventDefault(); }));
+                    <button class="btn-primary" onclick="register()">Create Account</button>
+                    <p id="se" class="err"></p>
 
-home();
-</script>
+                    <div class="toggle-link">
+                        Already have an account? <a onclick="loginView()">Log In</a>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function login() {
+            try {
+                const me = await api("/login", "POST", { username: $("u").value, password: $("p").value });
+                localStorage.setItem("me", JSON.stringify(me));
+                alert("Login successful!");
+            } catch (x) {
+                $("e").textContent = x.message;
+            }
+        }
+
+        async function register() {
+            const name = $("fn").value;
+            const username = $("su").value;
+            const password = $("sp").value;
+            const role = $("r").value;
+
+            if (!name || !username || !password) {
+                $("se").className = "err";
+                $("se").textContent = "Please fill in all required fields.";
+                return;
+            }
+
+            try {
+                await api("/api/register", "POST", { name, username, password, role });
+                $("se").className = "success";
+                $("se").textContent = "Account created successfully! Redirecting to login...";
+                setTimeout(() => loginView(), 1500);
+            } catch (x) {
+                $("se").className = "err";
+                $("se").textContent = x.message || "Registration failed.";
+            }
+        }
+
+        loginView();
+    </script>
 </body>
 </html>
