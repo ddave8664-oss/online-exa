@@ -36,14 +36,13 @@ label.chk{display:inline-block;margin-right:16px}
 .rv{padding:8px 0;border-bottom:1px solid var(--line)}
 .mask{-webkit-text-security:disc;text-security:disc}
 .logo-img {
-            width: 70px;
-            height: 70px;
-            object-fit: cover;
-            border-radius: 50%;
-            margin-bottom: 12px;
-            border: 2px solid var(--primary);
-            box-shadow: 0 4px 10px rgba(15, 43, 72, 0.15);
-        }
+    width: 85px;
+    height: 85px;
+    object-fit: contain;
+    border-radius: 50%;
+    display: block;
+    margin: 0 auto 15px auto;
+}
 </style>
 </head>
 <body>
@@ -89,7 +88,7 @@ function shell(title, html) {
 }
 function home() { if (!me) return loginView(); ({ admin: adminView, teacher: teacherView, student: studentView })[me.role]().catch(x => alert(x.message)); }
 function loginView() {
-    app.innerHTML = `<div class="card"><img src="/logo.jpg" alt="Logo" class="logo-img"><h1 id="sn">Exam System</h1><label>Username</label><input id="u" name="username" autocomplete="username"><label>Password</label><input id="p" type="password" name="password" autocomplete="current-password"><button class="btn-primary" onclick="login()">Log In</button><p id="e" class="err"></p></div>`;
+    app.innerHTML = `<div class="card"style="text-align: center;"><img src="/logo.jpg" alt="Logo" class="logo-img"><h1 id="sn">Exam System</h1><label>Username</label><input id="u" name="username" autocomplete="username"><label>Password</label><input id="p" type="password" name="password" autocomplete="current-password"><button class="btn-primary" onclick="login()">Log In</button><p id="e" class="err"></p></div>`;
    
 $("p").onkeydown = e => { if (e.key === "Enter") login(); };
     fetch("/api/public").then(r => r.json()).then(d => { $("sn").textContent = d.siteName; document.title = d.siteName; }).catch(() => {});
