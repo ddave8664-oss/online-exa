@@ -185,7 +185,7 @@ function loginView() {
     $("p").onkeydown = e => { if (e.key === "Enter") login(); };
     fetch("/api/public").then(r => r.json()).then(d => { if (d.siteName) $("sn").textContent = d.siteName; }).catch(() => {});
 }
-document.getElementById("signupBtn").onclick = () => signupView();
+
  
 async function login() {
   try { me = await api("login", "POST", { username: $("u").value, password: $("p").value }); localStorage.setItem("me", JSON.stringify(me)); home(); }
@@ -239,6 +239,7 @@ function signupView() {
             </div>
         </div>
     `;
+}
 }
 
 // ================= ADMIN =================
