@@ -81,6 +81,36 @@ body {
     justify-content: center;
     align-items: center;
 }
+.pw-container {
+    position: relative;
+    max-width: 260px;
+    margin: 0 auto 12px auto;
+}
+
+.pw-container input {
+    width: 100% !important;
+    padding-right: 55px !important;
+    margin: 0 !important;
+}
+
+.pw-toggle {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #e2e8f0;
+    border: none;
+    padding: 4px 7px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #0f2b48;
+}
+
+.pw-toggle:hover {
+    background: #cbd5e1;
+}
 </style>
 </head>
 <body>
@@ -127,38 +157,35 @@ function shell(title, html) {
 function home() { if (!me) return loginView(); ({ admin: adminView, teacher: teacherView, student: studentView })[me.role]().catch(x => alert(x.message)); }
 function loginView() {
     app.innerHTML = `
-        <div class="card" style="text-align: center; max-width: 400px; margin: 0 auto; padding: 32px 28px;">
+        <div class="card" style="text-align: center; max-width: 380px; margin: 0 auto; padding: 30px 24px;">
             <img src="/logo.jpg" alt="Logo" class="logo-img">
-            <h1 id="sn" style="font-size: 1.35rem; color: #0f2b48; font-weight: 700; margin-bottom: 4px;">BULE HORA UNIVERSITY</h1>
-            <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 22px;">Online Examination Portal</p>
+            <h1 id="sn" style="font-size: 1.3rem; color: #0f2b48; font-weight: 700; margin-bottom: 4px;">BULE HORA UNIVERSITY</h1>
+            <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 20px;">Online Examination Portal</p>
             
-            <div style="text-align: left; max-width: 300px; margin: 0 auto;">
-                <div style="margin-bottom: 14px;">
-                    <label style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 5px; color: #0f172a;">Username / Student ID</label>
-                    <input id="u" name="username" placeholder="Enter username" autocomplete="username" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none;">
+            <div style="text-align: left; max-width: 260px; margin: 0 auto;">
+                <label>Username / Student ID</label>
+                <input id="u" name="username" placeholder="Enter username" autocomplete="username">
+                
+                <label>Password</label>
+                <div class="pw-container">
+                    <input id="p" type="password" name="password" placeholder="Enter password" autocomplete="current-password">
+                    <button type="button" class="pw-toggle" onclick="togglePassword('p', this)">SHOW</button>
                 </div>
                 
-                <div style="margin-bottom: 18px; position: relative;">
-                    <label style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 5px; color: #0f172a;">Password</label>
-                    <div style="position: relative; display: flex; align-items: center;">
-                        <input id="p" type="password" name="password" placeholder="Enter password" autocomplete="current-password" style="width: 100%; padding: 10px 12px; padding-right: 60px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none;">
-                        <button type="button" onclick="togglePassword('p', this)" style="position: absolute; right: 8px; background: #e2e8f0; border: none; padding: 4px 8px; font-size: 0.75rem; font-weight: 600; border-radius: 5px; cursor: pointer; color: #0f2b48;">SHOW</button>
-                    </div>
-                </div>
-                
-                <button class="btn-primary" onclick="login()" style="width: 100%; padding: 11px; background-color: #0f2b48; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem;">Log In</button>
+                <button class="btn-primary" onclick="login()">Log In</button>
             </div>
             
-            <p id="e" class="err" style="margin-top: 12px;"></p>
+            <p id="e" class="err" style="margin-top: 10px;"></p>
 
-            <div style="margin-top: 18px; font-size: 0.85rem; color: #64748b;">
-                Don't have an account? <a onclick="signupView()" style="color: #0f2b48; font-weight: 600; cursor: pointer; text-decoration: underline;">Sign Up</a>
+            <div style="margin-top: 16px; font-size: 0.85rem; color: #64748b;">
+                Don't have an account? <a onclick="signupView()" style="color: #0f2b48; font-weight: 700; cursor: pointer; text-decoration: underline;">Sign Up</a>
             </div>
         </div>
     `;
     $("p").onkeydown = e => { if (e.key === "Enter") login(); };
     fetch("/api/public").then(r => r.json()).then(d => { if (d.siteName) $("sn").textContent = d.siteName; }).catch(() => {});
 }
+ 
 async function login() {
   try { me = await api("login", "POST", { username: $("u").value, password: $("p").value }); localStorage.setItem("me", JSON.stringify(me)); home(); }
   catch (x) { $("e").textContent = x.message; }
@@ -173,6 +200,16 @@ function exportCsv() {
   const rows = [["Student","Course","Exam","Score","Total","Percent","Result","Warnings","Date"], ...lastRs.map(r => [r.student, r.course || "", r.exam, r.score, r.total, pc(r), r.pending ? "Pending" : (r.passed ?? pc(r) >= 50) ? "Pass" : "Fail", r.violations || 0, r.at])];
   const b = new Blob([rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n")], { type: "text/csv" });
   const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = "results.csv"; a.click();
+}
+function togglePassword(inputId, btn) {
+    const input = document.getElementById(inputId);
+    if (input.type === "password") {
+        input.type = "text";
+        btn.textContent = "HIDE";
+    } else {
+        input.type = "password";
+        btn.textContent = "SHOW";
+    }
 }
 
 // ================= ADMIN =================
