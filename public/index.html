@@ -179,8 +179,8 @@ function loginView() {
             <p id="e" class="err" style="margin-top: 10px;"></p>
 
             <div style="margin-top: 16px; font-size: 0.85rem; color: #64748b;">
-    Don't have an account? <a id="goToSignup" style="color: #0f2b48; font-weight: 700; cursor: pointer; text-decoration: underline;">Sign Up</a>
-</div>
+                Don't have an account? <a onclick="signupView()" style="color: #0f2b48; font-weight: 700; cursor: pointer; text-decoration: underline;">Sign Up</a>
+            </div>
         </div>
     `;
     $("p").onkeydown = e => { if (e.key === "Enter") login(); };
@@ -204,7 +204,45 @@ function exportCsv() {
   const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = "results.csv"; a.click();
 }
 
+function togglePassword(inputId, btn) {
+    const input = document.getElementById(inputId);
+    if (input.type === "password") {
+        input.type = "text";
+        btn.textContent = "HIDE";
+    } else {
+        input.type = "password";
+        btn.textContent = "SHOW";
+    }
+}
 
+function signupView() {
+    app.innerHTML = `
+        <div class="card" style="text-align: center; max-width: 380px; margin: 0 auto; padding: 30px 24px;">
+            <img src="/logo.jpg" alt="Logo" class="logo-img">
+            <h1 style="font-size: 1.3rem; color: #0f2b48; font-weight: 700; margin-bottom: 4px;">Create Account</h1>
+            <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 20px;">Bule Hora University Portal</p>
+            
+            <div style="text-align: left; max-width: 260px; margin: 0 auto;">
+                <label style="font-size: 0.8rem; font-weight: 600; display: block; margin-bottom: 4px;">Full Name</label>
+                <input id="su_name" placeholder="Enter full name" style="width:100%; padding:8px; margin-bottom:10px; border:1px solid #cbd5e1; border-radius:6px;">
+
+                <label style="font-size: 0.8rem; font-weight: 600; display: block; margin-bottom: 4px;">Username / ID</label>
+                <input id="su_user" placeholder="Enter username" style="width:100%; padding:8px; margin-bottom:10px; border:1px solid #cbd5e1; border-radius:6px;">
+
+                <label style="font-size: 0.8rem; font-weight: 600; display: block; margin-bottom: 4px;">Password</label>
+                <input id="su_pass" type="password" placeholder="Enter password" style="width:100%; padding:8px; margin-bottom:14px; border:1px solid #cbd5e1; border-radius:6px;">
+
+                <button class="btn-primary" onclick="signup()" style="width: 100%; padding: 10px; background-color: #0f2b48; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Sign Up</button>
+            </div>
+
+            <p id="su_err" class="err" style="margin-top: 10px;"></p>
+
+            <div style="margin-top: 16px; font-size: 0.85rem; color: #64748b;">
+                Already have an account? <a onclick="loginView()" style="color: #0f2b48; font-weight: 700; cursor: pointer; text-decoration: underline;">Log In</a>
+            </div>
+        </div>
+    `;
+}
 
 // ================= ADMIN =================
 async function adminView() {
