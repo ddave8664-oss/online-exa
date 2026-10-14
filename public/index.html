@@ -157,7 +157,7 @@ function shell(title, html) {
 function home() { if (!me) return loginView(); ({ admin: adminView, teacher: teacherView, student: studentView })[me.role]().catch(x => alert(x.message)); }
 function loginView() {
     app.innerHTML = `
-    document.getElementById("goToSignup").onclick = () => signupView();
+    
         <div class="card" style="text-align: center; max-width: 380px; margin: 0 auto; padding: 30px 24px;">
             <img src="/logo.jpg" alt="Logo" class="logo-img">
             <h1 id="sn" style="font-size: 1.3rem; color: #0f2b48; font-weight: 700; margin-bottom: 4px;">BULE HORA UNIVERSITY</h1>
